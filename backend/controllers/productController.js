@@ -1,11 +1,15 @@
 const asyncHandler = require("express-async-handler");
 
+const Product = require("../models/productModel");
+
 // @desc Get products
 // @route GET /api/products
 // @access Private
 
 const getProducts = asyncHandler(async (req, res) => {
-  res.status(200).json({ message: "Get products" });
+  const products = await Product.find();
+
+  res.status(200).json(products);
 });
 
 // @desc Create product
@@ -17,7 +21,15 @@ const createProduct = asyncHandler(async (req, res) => {
     res.status(400);
     throw Error("Please add a name field");
   }
-  res.status(200).json({ message: "Create products" });
+
+  const product = await Product.create({
+    name: req.body.name,
+    category: req.body.category,
+    ingredients: req.body.ingredients,
+    price: req.body.price,
+  });
+
+  res.status(200).json(product);
 });
 
 // @desc Update products
